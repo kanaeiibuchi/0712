@@ -13,7 +13,7 @@
             @csrf
             @method('PUT')
              <div class="w-full">
-                <input type="text" name="team" class="w-full sm:w-1/2 md:w-3/4 p-2 border rounded-lg" value="{{$team->name}}">
+                <input type="text" name="team" class="w-full sm:w-1/2 md:w-3/4 p-2 border rounded-lg" value="{{$team->team}}">
                 <button type="submit" class="ml-2 p-2 w-24 bg-blue-300 text-black rounded-lg">更新</button>
              </div>
           </form>

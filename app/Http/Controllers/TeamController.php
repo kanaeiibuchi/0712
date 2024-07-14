@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers;
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TeamController extends Controller
@@ -13,10 +14,11 @@ class TeamController extends Controller
      */
     public function index()
     {
-        //
-         $teams = Team::orderBy('created_at', 'ASC')->get();
-        return view('teams.index', compact('teams'));
-
+        // ユーザーとチームの一覧を取得
+        $users = User::all();
+        $teams = Team::orderBy('created_at', 'ASC')->get();
+        // ビューにデータを渡す
+        return view('teams.index', compact('users','teams'));
     }
 
     /**
@@ -95,6 +97,46 @@ class TeamController extends Controller
         
         //一覧画面にリダイレクト
         return redirect()->route('teams.index');
-        
+    }
+
+    /**
+     * チームにエントリーするメソッド
+     */
+    public function entry(Request $request)
+    {
+        $user = $request->user();
+
+        // エントリー可能なチームを取得
+        $teams = Team::where('life_flg', 1)
+            ->whereNull('user_id_5')
+            ->get();
+
+        if ($teams->isEmpty()) {
+            return response()->json(['success' => false, 'message' => 'エントリー可能なチームがありません。']);
+        }
+
+        // ランダムにチームを選択
+        $team = $teams->random();
+
+        // チームにユーザーを割り当て
+        if (is_null($team->user_id_1)) {
+            $team->user_id_1 = $user->id;
+        } elseif (is_null($team->user_id_2)) {
+            $team->user_id_2 = $user->id;
+        } elseif (is_null($team->user_id_3)) {
+            $team->user_id_3 = $user->id;
+        } elseif (is_null($team->user_id_4)) {
+            $team->user_id_4 = $user->id;
+        } elseif (is_null($team->user_id_5)) {
+            $team->user_id_5 = $user->id;
+        }
+
+        $team->save();
+
+        // ユーザーのチームIDを更新
+        $user->team_id = $team->id;
+        $user->save();
+
+        return response()->json(['success' => true, 'message' => 'チームにエントリーされました！']); 
     }
 }

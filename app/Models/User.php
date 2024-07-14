@@ -25,6 +25,7 @@ class User extends Authenticatable
         'sex',
         'bio',
         'team_id',
+        'roll_flg',
     ];
 
     /**
@@ -55,8 +56,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Chat::class);
     }
-     public function teams()
+    public function teams()
     {
         return $this->hasMany(Team::class);
+    }
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
     }
 }

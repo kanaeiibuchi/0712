@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Chat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ChatController extends Controller
 {
@@ -12,9 +13,17 @@ class ChatController extends Controller
      */
     public function index()
     {
-        //データ取得
-       $chats = Chat::orderBy('created_at', 'ASC')->get();
-        return view('chats.index', compact('chats'));
+        //ユーザーのteam_idを取得
+       $team_id = auth()->user()->team_id;
+        
+        //team_idに基づいてチャットをフィルタリング
+       $chats = Chat::where('team_id', $team_id)->orderBy('created_at','ASC')->get();
+        
+        //普通のデータ取得
+       //$chats = Chat::orderBy('created_at', 'ASC')->get();
+       
+       //データをビューに渡す
+       return view('chats.index', compact('chats'));
     }
 
     /**
@@ -36,8 +45,13 @@ class ChatController extends Controller
             'chat'=>'required|max:255'
             ]);
             
+            
+        $request->user()->chats()->create([
+            'chat' => $request->input('chat'),
+            'team_id' => $request->user()->team_id // チームIDを追加
+        ]);    
         //データの保存
-        $request->user()->chats()->create($request->only('chat'));
+        //$request->user()->chats()->create($request->only('chat'));
         
         // indexのメソッドにリダイレクト
         return redirect()->route('chats.index');
