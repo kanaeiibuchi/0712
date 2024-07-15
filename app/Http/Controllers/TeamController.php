@@ -16,7 +16,7 @@ class TeamController extends Controller
     {
         // ユーザーとチームの一覧を取得
         $users = User::all();
-        $teams = Team::orderBy('created_at', 'ASC')->get();
+        $teams = Team::orderBy('created_at', 'ASC')->with('members')->get();
         // ビューにデータを渡す
         return view('teams.index', compact('users','teams'));
     }
@@ -139,4 +139,29 @@ class TeamController extends Controller
 
         return response()->json(['success' => true, 'message' => 'チームにエントリーされました！']); 
     }
+    
+    public function removeMember($teamId, $memberId)
+{
+    // メンバーのデータを取得
+    $member = User::findOrFail($memberId);
+
+    // チームのデータを取得
+    $team = Team::findOrFail($teamId);
+
+    // チームからメンバーを削除する処理
+    $member->team_id = null;
+    $member->save();
+
+    // チームのuser_id_*フィールドをNULLにする処理
+    for ($i = 1; $i <= 5; $i++) {
+        if ($team->{'user_id_' . $i} == $memberId) {
+            $team->{'user_id_' . $i} = null;
+            break;
+        }
+    }
+    $team->save();
+
+    return redirect()->route('teams.edit', $teamId)->with('status', 'メンバーが削除されました');
+}
+
 }

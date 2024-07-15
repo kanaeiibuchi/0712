@@ -17,20 +17,20 @@
                     </div>
                 </div>
                 @else
-                <div class="p-6 text-gray-900 dark:text-gray-100">
+                <div class="p-2 text-gray-900 dark:text-gray-100">
                     <!-- 所属チーム名表示 -->
-                    <div class="mt-4 mb-4">
+                    <div class="mt-2 mb-4">
                         @php
                             $team = \App\Models\Team::find(auth()->user()->team_id);
                         @endphp
-                        <p>{{ $team->team }}チーム</p>
+                        <p class=text-lg>{{ $team->team }}チーム</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="py-4">
+    <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
@@ -40,11 +40,11 @@
                         <a href="{{ route('chats.show', $chat) }}">
                             @if($chat->user_id == auth()->user()->id)
                             <div class="w-full flex justify-end">
-                                <div class="w-1/2 text-right">
+                                <div class="w-3/4 text-right">
                                     <div class="bg-blue-200 text-black rounded-lg mt-4 p-4">
-                                        <p>({{ $chat->created_at }})</p>
-                                        <p>{{ $chat->user->nickname }}</p>
-                                        <p>{{ $chat->chat }}</p>
+                                        <p class="text-gray-500 text-xs">{{ $chat->created_at->format('m/d H:i')  }}</p>
+                                        <p class="font-bold text-lg">{{ $chat->user->nickname }}</p>
+                                        <p>「{{ $chat->chat }}」</p>
                                     </div>
                                     <div class="flex justify-end gap-4 mt-2">
                                         <a href="{{ route('chats.edit', $chat) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">編集</a>
@@ -57,10 +57,10 @@
                                 </div>
                             </div>
                             @else
-                            <div class="bg-gray-100 text-black rounded-lg mt-4 p-4">
-                                <p>({{ $chat->created_at }})</p>
-                                <p>{{ $chat->user->nickname }}</p>
-                                <p>{{ $chat->chat }}</p>
+                            <div class="w-3/4 bg-gray-100 text-black rounded-lg mt-4 p-4">
+                                <p class="text-gray-500 text-xs">{{ $chat->created_at->format('m/d  H:i')  }}</p>
+                                <p class="font-bold text-lg">{{ $chat->user->nickname }}</p>
+                                <p>「{{ $chat->chat }}」</p>
                             </div>
                             @endif
                         </a>

@@ -38,6 +38,8 @@ Route::resource('teams', TeamController::class);
 // チームエントリーのルートを追加
 Route::post('/teams/entry', [TeamController::class, 'entry'])->name('teams.entry');
 
+// ユーザーのチーム登録を削除
+Route::delete('/teams/{team}/removeMember/{member}', [TeamController::class, 'removeMember'])->name('teams.removeMember');
 
 
 require __DIR__.'/auth.php';
