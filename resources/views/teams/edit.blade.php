@@ -24,12 +24,12 @@
               <ul>
                  @foreach($team->members as $member)
                 <li class="flex items-center">
-                  <div>&nbsp;&nbsp;{{ $member->nickname }}</div>
                   <form action="{{ route('teams.removeMember', ['team' => $team->id, 'member' => $member->id]) }}" method="POST" class="inline">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="ml-2 p-2 rounded-lg" style="color: red;">削除</button>
                   </form>
+                  <div>&nbsp;&nbsp;{{ $member->nickname }}</div>
                 </li>
                  @endforeach
                 </ul>
